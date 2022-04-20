@@ -127,6 +127,40 @@ class Users(GraphStream):
     date_fields = []
     orderby = 'displayName'
 
+    def get_all_users(self, client):
+        return client.get_all_resources(
+            self.version,
+            Users.endpoint,
+            top=self.top)
+
+    def sync(self, client, startdate=None):
+        yield humps.decamelize(self.get_all_users(client))
+
+
+class UserLicenses(GraphStream):
+    name = 'user_licenses'
+    version = GraphVersion.V1.value
+    key_properties = ['id']
+    replication_method = 'FULL_TABLE'
+    replication_key = None
+    endpoint = 'users/{user_id}/licenseDetails'
+    valid_replication_keys = []
+    date_fields = []
+    orderby = None
+
+    def sync(self, client, startdate=None):
+        licenses_result = []
+        for user in Users().get_all_users(client):
+            resources = client.get_all_resources(
+                self.version, self.endpoint.format(user_id=user.get('id')))
+
+            # Inject user id
+            for license in resources:
+                license['user_id'] = user.get('id')
+
+            transformed_resources = humps.decamelize(resources)
+            licenses_result.extend(transformed_resources)
+        yield licenses_result
 
 class Groups(GraphStream):
     name = 'groups'
@@ -539,6 +573,7 @@ class TeamDeviceUsageReport(GraphStream):
 
 AVAILABLE_STREAMS = {
     "users": Users,
+    "user_licenses": UserLicenses,
     "groups": Groups,
     "group_members": GroupMembers,
     "group_owners": GroupOwners,

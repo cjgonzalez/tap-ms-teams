@@ -1,0 +1,33 @@
+{
+    "type": ["null", "object"],
+    "additionalProperties": true,
+    "properties": {
+        "id": {
+            "type": ["null", "string"]
+        },
+        "sku_id": {
+            "type": ["null", "string"]
+        },
+        "sku_part_number": {
+            "type": ["null", "string"]
+        },
+        "service_plans": {
+            "type": ["null", "object"],
+            "additionalProperties": true,
+            "properties": {
+                "service_plan_id": {
+                    "type": ["null", "string"]
+                },
+                "service_plan_name": {
+                    "type": ["null", "string"]
+                },
+                "provisioning_status": {
+                    "type": ["null", "string"]
+                },
+                "applies_to": {
+                    "type": ["null", "string"]
+                }
+            }
+        }
+    }
+}

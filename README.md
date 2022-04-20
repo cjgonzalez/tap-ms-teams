@@ -12,6 +12,7 @@ This tap:
 - Pulls raw data from the [Microsoft Graph API](https://docs.microsoft.com/en-us/graph/)
 - Extracts the following resources:
   - [users](https://docs.microsoft.com/en-us/graph/api/user-list?view=graph-rest-beta&tabs=http)
+  - [user_licenses](https://docs.microsoft.com/en-us/graph/api/user-list-licensedetails?view=graph-rest-1.0&tabs=http)
   - [groups](https://docs.microsoft.com/en-us/graph/teams-list-all-teams?context=graph%2Fapi%2Fbeta&view=graph-rest-beta)
   - [group_members](https://docs.microsoft.com/en-us/graph/api/group-list-members?view=graph-rest-1.0&tabs=http)
   - [group_owners](https://docs.microsoft.com/en-us/graph/api/group-list-owners?view=graph-rest-1.0&tabs=http)
@@ -31,6 +32,11 @@ This tap:
 ## Streams
 
 - [users](https://docs.microsoft.com/en-us/graph/api/user-list?view=graph-rest-beta&tabs=http)
+  - Data key: value
+  - Primary keys: id
+  - Replication strategy: Full Table
+  - Transformations: camelCase to snake_case
+- [user_licenses](https://docs.microsoft.com/en-us/graph/api/user-list-licensedetails?view=graph-rest-1.0&tabs=http)
   - Data key: value
   - Primary keys: id
   - Replication strategy: Full Table
@@ -219,7 +225,7 @@ The Microsoft Graph API uses OAuth for authentication. Follow these instructions
 4. Run the Tap in Discovery Mode
     This creates a catalog.json for selecting objects/fields to integrate:
     ```bash
-    tap-ms-teams --config config.json --discover > catalog.json
+    tap-ms-teams --config tap_config.json --discover > catalog.json
     ```
    See the Singer docs on discovery mode
    [here](https://github.com/singer-io/getting-started/blob/master/docs/DISCOVERY_MODE.md#discovery-mode).
@@ -263,6 +269,7 @@ The Microsoft Graph API uses OAuth for authentication. Follow these instructions
         | stream                  | records | schemas |
         +-------------------------+---------+---------+
         | users                   | 10      | 1       |
+        | user_licenses           | 15      | 1       |
         | groups                  | 3       | 1       |
         | group_members           | 13      | 1       |
         | group_owners            | 7       | 1       |
